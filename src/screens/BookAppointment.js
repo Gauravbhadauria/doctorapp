@@ -8,13 +8,14 @@ import {
   TextInput,
   ScrollView,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from '../components/Header';
 import CommonBtn from '../components/CommonBtn';
-
-const BookAppointment = () => {
-  const [selectedSlot, setSelectedSlot] = useState(0);
+let DaysList = [];
+const BookAppointment = ({navigation}) => {
+  const [selectedSlot, setSelectedSlot] = useState(-1);
   const [selectedGender, setSelectedGender] = useState(0);
+  const [selectedDay, setSelectedDay] = useState(-1);
   const [slots, setSlots] = useState([
     {sloT: '10:00-12:00PM', selected: false},
     {sloT: '12:00-02:00PM', selected: false},
@@ -23,7 +24,44 @@ const BookAppointment = () => {
     {sloT: '06:00-08:00PM', selected: false},
     {sloT: '08:00-11:00PM', selected: false},
   ]);
+  const [days, setDays] = useState([]);
 
+  useEffect(() => {
+    DaysList = [];
+    for (let i = 1; i <= getDays(new Date().getMonth() + 1); i++) {
+      DaysList.push({day: i, selected: false});
+    }
+    setDays(DaysList);
+  }, []);
+  const getDays = month => {
+    let days = 0;
+    if (month == 1) {
+      days = 31;
+    } else if (month == 2) {
+      days = 28;
+    } else if (month == 3) {
+      days = 31;
+    } else if (month == 4) {
+      days = 30;
+    } else if (month == 5) {
+      days = 31;
+    } else if (month == 6) {
+      days = 30;
+    } else if (month == 7) {
+      days = 31;
+    } else if (month == 8) {
+      days = 31;
+    } else if (month == 9) {
+      days = 30;
+    } else if (month == 10) {
+      days = 31;
+    } else if (month == 11) {
+      days = 30;
+    } else if (month == 12) {
+      days = 31;
+    }
+    return days;
+  };
   return (
     <ScrollView style={styles.container}>
       <View style={styles.container}>
@@ -34,6 +72,40 @@ const BookAppointment = () => {
         <Image source={require('../images/doctor.png')} style={styles.docImg} />
         <Text style={styles.name}>Doctor Jack</Text>
         <Text style={styles.spcl}>Skin Doctor</Text>
+        <Text style={styles.heading}>Select Date</Text>
+        <View style={{marginTop: 20}}>
+          <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={days}
+            keyExtractor={({item, index}) => index}
+            renderItem={({item, index}) => {
+              return (
+                <TouchableOpacity
+                  style={{
+                    width: 60,
+                    height: 70,
+                    borderRadius: 20,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: selectedDay == index ? 'blue' : 'white',
+                    borderWidth: selectedDay == index ? 0 : 1,
+                    marginLeft: 10,
+                  }}
+                  onPress={() => {
+                    if (item.day < new Date().getDate()) {
+                    } else {
+                      setSelectedDay(index);
+                    }
+                  }}>
+                  <Text style={{color: selectedDay == index ? '#fff' : 'blue'}}>
+                    {item.day}
+                  </Text>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
         <Text style={styles.heading}>Available Slots</Text>
         <View>
           <FlatList
@@ -45,13 +117,13 @@ const BookAppointment = () => {
                 <TouchableOpacity
                   style={[
                     styles.timeSlot,
-                    {borderColor: selectedSlot == index ? 'blue' : 'balck'},
+                    {borderColor: index == selectedSlot ? 'blue' : 'black'},
                   ]}
                   onPress={() => {
                     setSelectedSlot(index);
                   }}>
                   <Text
-                    style={{color: selectedSlot == index ? 'blue' : 'balck'}}>
+                    style={{color: index == selectedSlot ? 'blue' : 'black'}}>
                     {item.sloT}
                   </Text>
                 </TouchableOpacity>
@@ -97,7 +169,15 @@ const BookAppointment = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.btnView}>
-          <CommonBtn w={300} h={45} txt={'Book Now'} status={true} />
+          <CommonBtn
+            w={300}
+            h={45}
+            txt={'Book Now'}
+            status={true}
+            onClick={() => {
+              navigation.navigate('Success');
+            }}
+          />
         </View>
       </View>
     </ScrollView>

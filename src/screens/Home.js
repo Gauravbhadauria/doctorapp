@@ -13,73 +13,107 @@ import LinearGradient from 'react-native-linear-gradient';
 import CommonBtn from '../components/CommonBtn';
 const Home = ({navigation}) => {
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.container}>
-        <Header title={'DoctorApp'} icon={require('../images/logo.png')} />
-        <Image source={require('../images/banner.jpg')} style={styles.banner} />
-        <Text style={styles.heading}>Select Category</Text>
-        <View style={{marginTop: 20}}>
-          <FlatList
-            data={[1, 1, 1, 1, 1, 1, 1]}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            renderItem={({item, index}) => {
-              return (
-                <TouchableOpacity>
-                  <LinearGradient
-                    colors={['#009FFD', '#2A2A72']}
-                    style={styles.linearGradient}>
-                    <Text style={styles.catName}>
-                      {'Category ' + index + 1}
+    <View style={styles.container}>
+      <ScrollView style={styles.container}>
+        <View style={styles.container}>
+          <Header title={'DoctorApp'} icon={require('../images/logo.png')} />
+          <Image
+            source={require('../images/banner.jpg')}
+            style={styles.banner}
+          />
+          <Text style={styles.heading}>Select Category</Text>
+          <View style={{marginTop: 20}}>
+            <FlatList
+              data={[1, 1, 1, 1, 1, 1, 1]}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              renderItem={({item, index}) => {
+                return (
+                  <TouchableOpacity>
+                    <LinearGradient
+                      colors={['#009FFD', '#2A2A72']}
+                      style={styles.linearGradient}>
+                      <Text style={styles.catName}>
+                        {'Category ' + index + 1}
+                      </Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+          </View>
+          <Text style={styles.heading}>Top Rated Doctors</Text>
+          <View style={{marginTop: 20, alignItems: 'center'}}>
+            <FlatList
+              numColumns={2}
+              data={[1, 1, 1, 1, 1, 1]}
+              renderItem={({item, index}) => {
+                return (
+                  <View style={styles.docItem}>
+                    <Image
+                      source={require('../images/doctor.png')}
+                      style={styles.docImg}
+                    />
+                    <Text style={styles.docName}>Doctor {index + 1}</Text>
+                    <Text style={styles.docSpl}>Skin Specialist</Text>
+                    <Text
+                      style={[
+                        styles.status,
+                        {
+                          color: index / 2 == 0 ? 'green' : 'red',
+                          opacity: index / 2 == 0 ? 1 : 0.5,
+                        },
+                      ]}>
+                      {index / 2 == 0 ? 'Available' : 'Busy'}
                     </Text>
-                  </LinearGradient>
-                </TouchableOpacity>
-              );
-            }}
-          />
+                    <CommonBtn
+                      w={150}
+                      h={40}
+                      status={index / 2 == 0 ? true : false}
+                      txt={'Book Appointment'}
+                      onClick={() => {
+                        if (index / 2 == 0) {
+                          navigation.navigate('BookAppointment');
+                        }
+                      }}
+                    />
+                  </View>
+                );
+              }}
+            />
+          </View>
         </View>
-        <Text style={styles.heading}>Top Rated Doctors</Text>
-        <View style={{marginTop: 20, alignItems: 'center'}}>
-          <FlatList
-            numColumns={2}
-            data={[1, 1, 1, 1, 1, 1]}
-            renderItem={({item, index}) => {
-              return (
-                <View style={styles.docItem}>
-                  <Image
-                    source={require('../images/doctor.png')}
-                    style={styles.docImg}
-                  />
-                  <Text style={styles.docName}>Doctor {index + 1}</Text>
-                  <Text style={styles.docSpl}>Skin Specialist</Text>
-                  <Text
-                    style={[
-                      styles.status,
-                      {
-                        color: index / 2 == 0 ? 'green' : 'red',
-                        opacity: index / 2 == 0 ? 1 : 0.5,
-                      },
-                    ]}>
-                    {index / 2 == 0 ? 'Available' : 'Busy'}
-                  </Text>
-                  <CommonBtn
-                    w={150}
-                    h={40}
-                    status={index / 2 == 0 ? true : false}
-                    txt={'Book Appointment'}
-                    onClick={() => {
-                      if (index / 2 == 0) {
-                        navigation.navigate('BookAppointment');
-                      }
-                    }}
-                  />
-                </View>
-              );
-            }}
+      </ScrollView>
+      <View style={styles.bottomView}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Completed');
+          }}>
+          <Image
+            source={require('../images/completed.png')}
+            style={styles.bottomIcon}
           />
-        </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Pending');
+          }}>
+          <Image
+            source={require('../images/pending.png')}
+            style={styles.bottomIcon}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('CallAmb');
+          }}>
+          <Image
+            source={require('../images/ambulance.png')}
+            style={styles.bottomIcon}
+          />
+        </TouchableOpacity>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -152,5 +186,22 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontWeight: '600',
     alignSelf: 'center',
+  },
+  bottomView: {
+    width: '90%',
+    height: 60,
+    borderRadius: 10,
+    elevation: 5,
+    position: 'absolute',
+    bottom: 20,
+    backgroundColor: '#fff',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+  },
+  bottomIcon: {
+    width: 30,
+    height: 30,
   },
 });
